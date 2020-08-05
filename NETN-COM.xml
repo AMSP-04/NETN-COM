@@ -4,7 +4,7 @@
         <name>NETN-COM</name>
         <type>FOM</type>
         <version>1.0</version>
-        <modificationDate>2020-07-22</modificationDate>
+        <modificationDate>2020-08-05</modificationDate>
         <securityClassification>Not classified</securityClassification>
         <purpose>Simulation, Training</purpose>
         <applicationDomain></applicationDomain>
@@ -449,13 +449,6 @@ NOS: Not Otherwise Specified</semantics>
                 <cardinality>Dynamic</cardinality>
                 <encoding>HLAvariableArray</encoding>
                 <semantics>The status of physical network links.</semantics>
-            </arrayData>
-            <arrayData>
-                <name>Text64</name>
-                <dataType>HLAunicodeChar</dataType>
-                <cardinality>[0..64]</cardinality>
-                <encoding>HLAvariableArray</encoding>
-                <semantics>Text of max length 64 characters.</semantics>
             </arrayData>
             <arrayData>
                 <name>NetworkDeviceArray</name>
