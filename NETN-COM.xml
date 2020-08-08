@@ -279,7 +279,7 @@ If the referenced entity does not exist in the federation, the location of the n
                 <objectClass>
                     <name>DisruptionEffect</name>
                     <sharing>Neither</sharing>
-                    <semantics>Representation of a disruption of connections between communication nodes located in the affected area. </semantics>
+                    <semantics>Representation of a disruption of connections between communication nodes located in the affected area.</semantics>
                     <attribute>
                         <name>AffectedNetworks</name>
                         <dataType>ArrayOfText64</dataType>
@@ -304,7 +304,7 @@ If the referenced entity does not exist in the federation, the location of the n
                     </attribute>
                     <attribute>
                         <name>Effect</name>
-                        <dataType>Percent</dataType>
+                        <dataType>PercentFloat64</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
