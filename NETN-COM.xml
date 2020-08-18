@@ -4,7 +4,7 @@
         <name>NETN-COM</name>
         <type>FOM</type>
         <version>1.0</version>
-        <modificationDate>2020-08-05</modificationDate>
+        <modificationDate>2020-08-17</modificationDate>
         <securityClassification>Not classified</securityClassification>
         <purpose>Simulation, Training</purpose>
         <applicationDomain></applicationDomain>
@@ -278,7 +278,7 @@ If the referenced entity does not exist in the federation, the location of the n
                 </objectClass>
                 <objectClass>
                     <name>DisruptionEffect</name>
-                    <sharing>Neither</sharing>
+                    <sharing>PublishSubscribe</sharing>
                     <semantics>Representation of a disruption of connections between communication nodes located in the affected area.</semantics>
                     <attribute>
                         <name>AffectedNetworks</name>
@@ -294,8 +294,8 @@ If the referenced entity does not exist in the federation, the location of the n
                     <attribute>
                         <name>AffectedArea</name>
                         <dataType>GeodeticQuadrangle</dataType>
-                        <updateType>NA</updateType>
-                        <updateCondition></updateCondition>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
