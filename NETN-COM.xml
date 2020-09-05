@@ -4,7 +4,7 @@
         <name>NETN-COM</name>
         <type>FOM</type>
         <version>1.0</version>
-        <modificationDate>2020-08-05</modificationDate>
+        <modificationDate>2020-09-05</modificationDate>
         <securityClassification>Not classified</securityClassification>
         <purpose>Simulation, Training</purpose>
         <applicationDomain></applicationDomain>
@@ -37,17 +37,6 @@ This module is a specification of how to represent Communication Networks in a f
             <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
-        </poc>
-        <poc>
-            <pocType>Contributor</pocType>
-            <pocName>Daniel Kallfass</pocName>
-            <pocOrg>Airbus Defence and Space</pocOrg>
-        </poc>
-        <poc>
-            <pocType>Contributor</pocType>
-            <pocName>Björn Löfstrand</pocName>
-            <pocOrg>Pitch Technologies</pocOrg>
-            <pocEmail>bjorn.lofstrand@pitch.se</pocEmail>
         </poc>
         <reference>
             <type>Dependency</type>
@@ -274,6 +263,44 @@ If the referenced entity does not exist in the federation, the location of the n
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
                         <semantics>Required: Status of a set of physical network links.</semantics>
+                    </attribute>
+                </objectClass>
+                <objectClass>
+                    <name>DisruptionEffect</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <semantics>The `DisruptionEffect` object class is used to represent the disruption of connections between communication nodes in an affected area. Communication models can subscribe to disruption-effect objects and use the information to simulate the effect of disruption on communication nodes, connections and link states.</semantics>
+                    <attribute>
+                        <name>AffectedNetworks</name>
+                        <dataType>ArrayOfText64</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition></updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Names of all affected communication networks. If not provided all networks in the specified area are affected.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>AffectedArea</name>
+                        <dataType>GeodeticQuadrangle</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Area affected by disruption. If not provided the default is a global disruption and all connections are affected.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Effect</name>
+                        <dataType>PercentFloat64</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Required. Level of disruption in percent. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.</semantics>
                     </attribute>
                 </objectClass>
             </objectClass>

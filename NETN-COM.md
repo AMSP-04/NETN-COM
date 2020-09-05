@@ -6,7 +6,7 @@ This module is a specification of how to represent Communication Networks and re
 
 ## Purpose
 The purpose of the NETN COM module is to provide a standard way to exchange data related to Communication Networks and Physical Networks. The main objective is to provide a generic model that represents the status of connections in a communication network and links in a physical network.
-The Communication Networks can be set up to use radios, ethernet, satellite communication or laser based links, transmitting from point to point or routing through the network.
+The Communication Networks can be set up to use radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.
 
 ## Introduction
 The NETN-COM module distinguishes between three layers of networks.
@@ -40,8 +40,8 @@ Figure. Object Classes
 The application layer should only use the `CommunicationNode` and `Connection` objects to determine if data can be sent or received. If no `Connection` object exists or if the `Receivers` attribute is empty, the sender can drop the data entirely. A receiver should drop any incoming messages if not included in the `Receivers` attribute of the corresponding `Connection` object. If the `IncommingConnections` attribute of a `CommunicationNode` is calculated for a receiver, it can be used to determine if incoming data should be dropped or not.
 
 
-## CommunicationNetwork
-The CommunicationNetwork class specifies details about the type of and service used by a logical communication network. This corresponds to the CommunicationNet-Elements of MSDL Units and Equipments. 
+## Communication Networks
+The `CommunicationNetwork` class specifies details about the type of and service used by a logical communication network. This corresponds to the CommunicationNet-Elements of MSDL Units and Equipment Items. 
 Instances of this object class should be considered as optional. No federate should rely on this data to work with communication networks.
 
 |Attribute|Description|
@@ -49,8 +49,8 @@ Instances of this object class should be considered as optional. No federate sho
 |UniqueName|**Required.** Unique communication network name. Unique in the context of communication networks.|
 |NetworkType|**Optional.** The communication network type of use.|
 |ServiceType|**Optional.** The type of service used on the communication network.|
- 
-## CommunicationNode
+  
+## Communication Nodes
 
 A `CommunicationNode` is the representation of the interface of a simulated entity to logical communication networks. The location of the `CommunicationNode` is derived from the referenced entity or specified explicitly if the referenced entity is not registered in the federation.
 
@@ -97,7 +97,7 @@ Depending on the type of the requested connection the use of the associated netw
 
 Before any data can be sent using a connection, it must have been requested, and the corresponding `Connection` object instance must exist in the federation.
 
-## Connection
+## Connections
 
 A connection object describes the communication capability of each entity to all other entities with respect to a communication network. The `Connection` object is created for each requested connection if there is at least one reachable receiver. The federation agreement defines which system is responsible for creating and maintaining the connection instance. The connection describes the connectivity but not the routes through a physical network defined by links between nodes. 
 
@@ -107,7 +107,7 @@ A connection object describes the communication capability of each entity to all
 |SenderEntityId|**Required.** A reference to the entity sending data using this connection.|
 |Receivers|**Required.** Characteristics of the connections to individual receiving entities.|
 
-## PhysicalNetwork
+## Physical Networks
 
 The `PhysicalNetwork` object class represents type-specific parameters/constraints for a physical network. Physical networks are simulated by LinkState objects and do not require that an instance of PhysicalNetwork exist in the federation. 
 
@@ -116,11 +116,11 @@ The `PhysicalNetwork` object class represents type-specific parameters/constrain
 |UniqueName|**Required.** Unique physical network name. Uniqueness in the context of physical networks.|
 |Description|**Required.** Characteristics of the physical network.|
 
-## LinkStates
+## Link States
 
 A `LinkStates` object describes the presence and quality of a set of direct links between nodes on a physical level. Links are defined between a transmitting and receiving device. 
 
-Bidirectional links assumes identical link quality in both directions. Otherwise, two unidirectional links should be described. 
+Bidirectional links assume identical link quality in both directions. Otherwise, two unidirectional links should be described. 
 
 Each `LinkStates` instance is associated with one physical network. To support load balancing in link quality simulation, multiple `LinkStates` instances can be associated with the same physical network as long as they do not contain duplicated link-state information.
 
@@ -132,3 +132,13 @@ The link states provide information that can be used to calculate connections.
 |---|---|
 |PhysicalNetworkName|**Required.** Reference to physical network by its unique name.|
 |Links|**Required.** Status of a set of physical network links.|
+
+## Disruption Effects
+
+The `DisruptionEffect` object class is used to represent the disruption of connections between communication nodes in an affected area. Communication models can subscribe to disruption-effect objects and use the information to simulate the effect of disruption on communication nodes, connections and link states.
+
+|Attribute|Description|
+|---|---|
+|AffectedNetworks|**Optional:** Names of all affected communication networks. If not provided all networks in the specified area are affected.|
+|AffectedArea|**Optional.** Area affected by disruption. If not provided the default is a global disruption and all connections are affected.|
+|Effect|**Required.** Level of disruption in percent. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
