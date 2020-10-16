@@ -46,6 +46,7 @@ Instances of this object class should be considered as optional. No federate sho
 
 |Attribute|Description|
 |---|---|
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
 |UniqueName|**Required.** Unique communication network name. Unique in the context of communication networks.|
 |NetworkType|**Optional.** The communication network type of use.|
 |ServiceType|**Optional.** The type of service used on the communication network.|
@@ -59,7 +60,8 @@ Each potential connection is described in terms of requested connections (the eq
 
 |Attribute|Description|
 |---|---|
-|EntityId|**Required.** Required: Reference by UUID to an object instance of one of the following classes: (1) NETN-MRM Aggregate Entity, (2) NETN-Physical extensions of RPR Platforms and Lifeform object classes. If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute. |
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
+|EntityId|**Required.** Reference by UUID to an object instance of one of the following classes: (1) NETN-MRM Aggregate Entity, (2) NETN-Physical extensions of RPR Platforms and Lifeform object classes. If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute. |
 |Location|**Optional.** Specifies the location of the CommunicationNode in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
 |RequestedConnections|**Required.** Possible (requested) connections for the communication node. |
 |NetworkDevices|**Required.** Available network devices defining the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only to one physical network. Each network device also describes the transmitter and receiver capabilities.|
@@ -103,6 +105,7 @@ A connection object describes the communication capability of each entity to all
 
 |Attribute|Description|
 |---|---|
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
 |CommunicationNetworkName|**Required.** A reference to the communication network this connection belongs to.|
 |SenderEntityId|**Required.** A reference to the entity sending data using this connection.|
 |Receivers|**Required.** Characteristics of the connections to individual receiving entities.|
@@ -113,6 +116,7 @@ The `PhysicalNetwork` object class represents type-specific parameters/constrain
 
 |Attribute|Description|
 |---|---|
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
 |UniqueName|**Required.** Unique physical network name. Uniqueness in the context of physical networks.|
 |Description|**Required.** Characteristics of the physical network.|
 
@@ -130,6 +134,7 @@ The link states provide information that can be used to calculate connections.
 
 |Attribute|Description|
 |---|---|
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
 |PhysicalNetworkName|**Required.** Reference to physical network by its unique name.|
 |Links|**Required.** Status of a set of physical network links.|
 
@@ -139,6 +144,7 @@ The `DisruptionEffect` object class is used to represent the disruption of conne
 
 |Attribute|Description|
 |---|---|
-|AffectedNetworks|**Optional:** Names of all affected communication networks. If not provided all networks in the specified area are affected.|
+|UniqueId (Inherited)|**Required.** Unique identifer for all NETN-COM object classes.|
+|AffectedNetworks|**Optional.** Names of all affected communication networks. If not provided all networks in the specified area are affected.|
 |AffectedArea|**Optional.** Area affected by disruption. If not provided the default is a global disruption and all connections are affected.|
 |Effect|**Required.** Level of disruption in percent. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
