@@ -3,8 +3,8 @@
     <modelIdentification>
         <name>NETN-COM</name>
         <type>FOM</type>
-        <version>1.0</version>
-        <modificationDate>2020-09-05</modificationDate>
+        <version>1.1</version>
+        <modificationDate>2022-07-10</modificationDate>
         <securityClassification>Not classified</securityClassification>
         <purpose>Simulation, Training</purpose>
         <applicationDomain></applicationDomain>
@@ -38,6 +38,12 @@ This module is a specification of how to represent Communication Networks in a f
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
+        <poc>
+            <pocType>Contributor</pocType>
+            <pocName>MSG-191</pocName>
+            <pocOrg>NATO Modelling and Simulation Group</pocOrg>
+            <pocEmail>msg@cso.nato.int</pocEmail>
+        </poc>
         <reference>
             <type>Dependency</type>
             <identification>NETN-BASE</identification>
@@ -55,17 +61,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <name>COM_Root</name>
                 <sharing>Neither</sharing>
                 <semantics>Abstract root class for all NETN-COM objects.</semantics>
-                <attribute>
-                    <name>UniqueId</name>
-                    <dataType>UUID</dataType>
-                    <updateType>NA</updateType>
-                    <updateCondition>Static</updateCondition>
-                    <ownership>NoTransfer</ownership>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>Required. Unique identifer for all NETN-COM object classes.</semantics>
-                </attribute>
                 <objectClass>
                     <name>CommunicationNetwork</name>
                     <sharing>PublishSubscribe</sharing>
