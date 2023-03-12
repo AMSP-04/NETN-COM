@@ -10,7 +10,7 @@
         <applicationDomain></applicationDomain>
         <description>NATO Education and Training Network (NETN) Communication Network (COM) Module. 
         
-This module is a specification of how to represent Communication Networks in a federated distributed simulation. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA OMT based Federation Object Model (FOM) is used to specify types of data and how it is encoded on the network. The NETN COM FOM module is available as a XML file for use in HLA based federations.</description>
+This module is a specification of how to represent Communication Networks in a federated distributed simulation. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and how it is encoded on the network. The NETN COM FOM module is available as an XML file for use in HLA-based federations.</description>
         <useLimitation></useLimitation>
         <useHistory>1.0.0 - Initial version developed by MSG-164 and MSG-163 for NETN-FOM v3.0</useHistory>
         <useHistory>1.1.0 - Version developed by MSG-191 for NATO FOM v4.0</useHistory>
@@ -59,8 +59,8 @@ Above license gives you the right to use and redistribute this FOM Module (XML f
                 <objectClass>
                     <name>CommunicationNetwork</name>
                     <sharing>PublishSubscribe</sharing>
-                    <semantics>The CommunicationNetwork class specifies details about the type of and service used by a logical communication network. This corresponds to the CommunicationNet-Elements of MSDL Units and Equipments. 
-Instances of this object class should be considered as optional. No federate should rely on this data to work with communication networks.</semantics>
+                    <semantics>The `CommunicationNetwork` class specifies details about the type of service used by a logical communication network. This corresponds to the CommunicationNet-Elements of MSDL Units and Equipments. 
+Instances of this object class should be considered optional. No federate should rely on this data to work with communication networks.</semantics>
                     <attribute>
                         <name>UniqueName</name>
                         <dataType>Text64</dataType>
@@ -98,7 +98,7 @@ Instances of this object class should be considered as optional. No federate sho
                 <objectClass>
                     <name>CommunicationNode</name>
                     <sharing>PublishSubscribe</sharing>
-                    <semantics>A CommunicationNode is the representation of the interface of a simulated entity to logical communication networks. The location of the CommunicationNode is derived from the referenced entity or specified explicitly (if the referenced entity is not registered in the federation). 
+                    <semantics>A `CommunicationNode` is the representation of the interface of a simulated entity to logical communication networks. The location of the `CommunicationNode` is derived from the referenced entity or specified explicitly (if the referenced entity is not registered in the federation). 
  
 Connections to communication networks are established only if connectivity exists based on the status of available network devices and the simulation of links. Each potential connection is described in terms of requested connections  (the equivalent to the information provided by MSDL).</semantics>
                     <attribute>
@@ -127,7 +127,7 @@ If the referenced entity does not exist in the federation, the location of the n
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. Specifies the location of the CommunicationNode in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.</semantics>
+                        <semantics>Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.</semantics>
                     </attribute>
                     <attribute>
                         <name>RequestedConnections</name>
@@ -149,7 +149,7 @@ If the referenced entity does not exist in the federation, the location of the n
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Required. Available network devices defining the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only to one physical network. Each network device also describes the transmitter and receiver capabilities.</semantics>
+                        <semantics>Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.</semantics>
                     </attribute>
                     <attribute>
                         <name>IncomingConnections</name>
@@ -241,7 +241,7 @@ If the referenced entity does not exist in the federation, the location of the n
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Required. Reference to physical network by its unique name.</semantics>
+                        <semantics>Required. Reference to a physical network by its unique name.</semantics>
                     </attribute>
                     <attribute>
                         <name>Links</name>
@@ -279,7 +279,7 @@ If the referenced entity does not exist in the federation, the location of the n
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. Area affected by disruption. If not provided the default is a global disruption and all connections are affected.</semantics>
+                        <semantics>Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.</semantics>
                     </attribute>
                     <attribute>
                         <name>Effect</name>
@@ -290,18 +290,13 @@ If the referenced entity does not exist in the federation, the location of the n
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Required. Level of disruption in percent. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.</semantics>
+                        <semantics>Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.</semantics>
                     </attribute>
                 </objectClass>
             </objectClass>
         </objectClass>
     </objects>
-    <dimensions/>
-    <synchronizations/>
-    <transportations/>
-    <updateRates/>
     <dataTypes>
-        <basicDataRepresentations/>
         <simpleDataTypes>
             <simpleData>
                 <name>BitsPerSecond</name>
@@ -345,7 +340,7 @@ If the referenced entity does not exist in the federation, the location of the n
             <enumeratedData>
                 <name>CommunicationNetworkTypeEnum</name>
                 <representation>HLAoctet</representation>
-                <semantics>The type of a communication network.</semantics>
+                <semantics>The type of communication network.</semantics>
                 <enumerator>
                     <name>OTHER</name>
                     <value>0</value>
@@ -382,7 +377,7 @@ MCI: Multilateral Interoperability Programme (MIP) Common Interface Service
 MHS: Message Handling Service 
 TDL: Tactical Data Link 
 VIDSVC: Video Service 
-VOCSVC:Voice Service 
+VOCSVC: Voice Service 
 NOS: Not Otherwise Specified</semantics>
                 <enumerator>
                     <name>DATTRF</name>
@@ -428,7 +423,7 @@ NOS: Not Otherwise Specified</semantics>
             <enumeratedData>
                 <name>ConnectionTypeEnum</name>
                 <representation>HLAoctet</representation>
-                <semantics>The type of a connection.</semantics>
+                <semantics>The type of connection.</semantics>
                 <enumerator>
                     <name>BroadcastTransceiver</name>
                     <value>0</value>
@@ -472,7 +467,7 @@ NOS: Not Otherwise Specified</semantics>
                 <dataType>NetworkDeviceStruct</dataType>
                 <cardinality>Dynamic</cardinality>
                 <encoding>HLAvariableArray</encoding>
-                <semantics>A set of nework devices.</semantics>
+                <semantics>A set of network devices.</semantics>
             </arrayData>
             <arrayData>
                 <name>RequestedConnectionArray</name>
@@ -507,7 +502,7 @@ NOS: Not Otherwise Specified</semantics>
             <fixedRecordData>
                 <name>LinkStatusStruct</name>
                 <encoding>HLAfixedRecord</encoding>
-                <semantics>Status of a physcial network link.</semantics>
+                <semantics>Status of a physical network link.</semantics>
                 <field>
                     <name>TransmitterDeviceId</name>
                     <dataType>UUID</dataType>
@@ -793,7 +788,7 @@ NOS: Not Otherwise Specified</semantics>
                     <semantics>Characteristics of a generic physical network.</semantics>
                 </alternative>
                 <encoding>HLAvariantRecord</encoding>
-                <semantics>Characteristics of physical networks depending on their type.</semantics>
+                <semantics>Characteristics of physical networks depend on their type.</semantics>
             </variantRecordData>
         </variantRecordDataTypes>
     </dataTypes>
