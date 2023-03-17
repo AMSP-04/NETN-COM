@@ -37,16 +37,18 @@ The application layer should only use the `CommunicationNode` and `Connection` o
 ## Object Classes 
 
 ### CommunicationNetwork
+
 The `CommunicationNetwork` class specifies details about the type of service used by a logical communication network. This corresponds to the CommunicationNet-Elements of MSDL Units and Equipments. 
 Instances of this object class should be considered optional. No federate should rely on this data to work with communication networks.
-
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|NetworkType|CommunicationNetworkTypeEnum|Optional. The communication network type of use.|
-|ServiceType|CommunicationServiceTypeEnum|Optional. The type of service used on the communication network.|
-|UniqueName|Text64|Required. Unique communication network name. Unique in the context of communication networks.|
+    
+|Attribute|Semantics|
+|---|---|
+|NetworkType|Optional. The communication network type of use.|
+|ServiceType|Optional. The type of service used on the communication network.|
+|UniqueName|Required. Unique communication network name. Unique in the context of communication networks.|
 
 ### CommunicationNode
+
 A `CommunicationNode` is the representation of the interface of a simulated entity to logical communication networks. The location of the `CommunicationNode` is derived from the referenced entity or specified explicitly (if the referenced entity is not registered in the federation). 
 
 Each potential connection is described in terms of requested connections (the equivalent to the information provided by MSDL). `Connection` objects represent the availability of a connection and its receivers. It is up to a communication simulation to create `Connection` objects for the requested connections based on the network devices of the `CommunicationNode`, the physical network and the link quality between network devices. Depending on the federation design and agreements, the explicit representation of the physical layer objects, `PhysicalNetwork` and `LinkStates`, is optional.
@@ -83,32 +85,34 @@ Depending on the type of the requested connection the use of the associated netw
 
 Before any data can be sent using a connection, it must have been requested, and the corresponding `Connection` object instance must exist in the federation.
 
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|EntityId|UUID|Required. Reference by UUID to an object instance of one of the following classes: * NETN-MRM Aggregate Entity * NETN-Physical extensions of RPR Physical Entities. If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute.|
-|IncomingConnections|IncomingConnectionArray|Optional. Description of all incoming connections to the receiving entity.|
-|Location|WorldLocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
-|NetworkDevices|NetworkDeviceArray|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
-|RequestedConnections|RequestedConnectionArray|Required. Possible (requested) connections for the communication node.|
+|Attribute|Semantics|
+|---|---|
+|EntityId|Required. Reference by UUID to an object instance of one of the following classes: <br/> <br/>* NETN-MRM Aggregate Entity <br/>* NETN-Physical extensions of RPR Physical Entities. <br/> <br/>If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. <br/>If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute.|
+|IncomingConnections|Optional. Description of all incoming connections to the receiving entity.|
+|Location|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
+|NetworkDevices|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
+|RequestedConnections|Required. Possible (requested) connections for the communication node.|
 
 ### Connection
-A connection object describes the communication capability of each entity to all other entities for a communication network. The `Connection` object is created for each requested connection if there is at least one reachable receiver. The federation agreement defines which system is responsible for creating and maintaining the connection instance. The connection describes the connectivity but not the routes through a physical network defined by links between nodes. 
 
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|CommunicationNetworkName|Text64|Required. A reference to the communication network this connection belongs to.|
-|Receivers|ConnectionReceiverArray|Required. Characteristics of the connections to individual receiving entities.|
-|SenderEntityId|UUID|Required. A reference to the entity sending data using this connection.|
+A connection object describes the communication capability of each entity to all other entities for a communication network. The `Connection` object is created for each requested connection if there is at least one reachable receiver. The federation agreement defines which system is responsible for creating and maintaining the connection instance. The connection describes the connectivity but not the routes through a physical network defined by links between nodes. 
+    
+|Attribute|Semantics|
+|---|---|
+|CommunicationNetworkName|Required. A reference to the communication network this connection belongs to.|
+|Receivers|Required. Characteristics of the connections to individual receiving entities.|
+|SenderEntityId|Required. A reference to the entity sending data using this connection.|
 
 ### PhysicalNetwork
+
 The `PhysicalNetwork` object class represents type-specific parameters/constraints for a physical network. Physical networks are simulated by `LinkState` objects and do not require that an instance of PhysicalNetwork exist in the federation.
-
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|Description|PhysicalNetworkDescriptionVariant|Required. Characteristics of the physical network.|
-|UniqueName|Text64|Required. Unique physical network name. Uniqueness in the context of physical networks.|
-
+    
+|Attribute|Semantics|
+|---|---|
+|Description|Required. Characteristics of the physical network.|
+|UniqueName|Required. Unique physical network name. Uniqueness in the context of physical networks.|
 ### LinkStates
+
 A `LinkStates` object describes the presence and quality of a set of direct links between nodes on a physical level. Links are defined between a transmitting and receiving device. 
 
 Bidirectional links assume identical link quality in both directions. Otherwise, two unidirectional links should be described. 
@@ -118,62 +122,45 @@ Each `LinkStates` instance is associated with one physical network. To support l
 A link should not be contained in more than one `LinkStates` object. If a link is not contained in any instance, it is not present, and it means it could not be established.
 
 The `LinkStates` provides information that can be used to calculate connections.
-
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|Links|LinkStatusArray|Required. Status of a set of physical network links.|
-|PhysicalNetworkName|Text64|Required. Reference to a physical network by its unique name.|
-
+    
+|Attribute|Semantics|
+|---|---|
+|Links|Required. Status of a set of physical network links.|
+|PhysicalNetworkName|Required. Reference to a physical network by its unique name.|
 ### DisruptionEffect
-The `DisruptionEffect` object class is used to represent the disruption of connections between communication nodes in an affected area. Communication models can subscribe to disruption-effect objects and use the information to simulate the effect of disruption on communication nodes, connections and link states.
 
-|Attribute|Dataype|Semantics|
-|---|---|---|
-|AffectedArea|GeodeticQuadrangle|Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.|
-|AffectedNetworks|ArrayOfText64|Optional. Names of all affected communication networks. If not provided all networks in the specified area are affected.|
-|Effect|PercentFloat64|Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
+The `DisruptionEffect` object class is used to represent the disruption of connections between communication nodes in an affected area. Communication models can subscribe to disruption-effect objects and use the information to simulate the effect of disruption on communication nodes, connections and link states.
+    
+|Attribute|Semantics|
+|---|---|
+|AffectedArea|Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.|
+|AffectedNetworks|Optional. Names of all affected communication networks. If not provided all networks in the specified area are affected.|
+|Effect|Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
 
 ## Datatypes 
-        
-### Simple Datatype
-|Name|Units|Semantics|
-|---|---|---|
-|BitsPerSecond|NA|Data transfer rate.|
-        
-### Enumerated Datatype
-|Name|Representation|Semantics|
-|---|---|---|
-|CommunicationNetworkTypeEnum|HLAoctet|The type of communication network.|
-|CommunicationServiceTypeEnum|HLAoctet|The type of service used on a communication network. Service types as defined in MSDL. DATTRF: Data transfer FAX: Facsimile IFF: Identify Friend or Foe IMAGE: Image MCI: Multilateral Interoperability Programme (MIP) Common Interface Service MHS: Message Handling Service TDL: Tactical Data Link VIDSVC: Video Service VOCSVC: Voice Service NOS: Not Otherwise Specified|
-|ConnectionTypeEnum|HLAoctet|The type of connection.|
-|PhysicalNetworkTypeEnum|HLAoctet|The type of a physical network.|
-        
-### Array Datatype
-|Name|Element Datatype|Semantics|
-|---|---|---|
-|CommunicationNetworkArray|Text64|References to a set of communication networks.|
-|ConnectionReceiverArray|ConnectionReceiverStruct|Connection characteristics for a number of receivers.|
-|IncomingConnectionArray|IncomingConnectionStruct|A set of incoming connections.|
-|LinkStatusArray|LinkStatusStruct|The status of physical network links.|
-|NetworkDeviceArray|NetworkDeviceStruct|A set of network devices.|
-|RequestedConnectionArray|RequestedConnection|Characterisation of a set of requested connections.|
-        
-### Fixed Record Datatype
-|Name|Fields|Semantics|
-|---|---|---|
-|ConnectionReceiverStruct|ReceiverEntityId, Latency, Bandwidth, Reliability, HopCount|Characteristics of a connection to a receiver.|
-|IncomingConnectionStruct|CommunicationNetworkName, SenderEntityId, Latency, Bandwidth, Reliability, HopCount|Characteristics of a specific incoming connection.|
-|LinkStatusStruct|TransmitterDeviceId, ReceiverDeviceId, Latency, Bandwidth, Reliability, IsBidirectional|Status of a physical network link.|
-|NetworkDeviceEmptyCharactersticsStruct||Empty placeholder for future network device characteristics.|
-|NetworkDeviceGenericTransmitterCharacteristicsStruct|MaxLinkRange|Generic description of network device transmitter.|
-|NetworkDeviceStruct|NetworkDeviceId, NetworkDeviceModel, CommunicationNetworks, PhysicalNetworkName, TX, RX, IsRelay|Describes the type and capability of a network device. Each device must have at least a transmitter (TX) or receiver (RX). Transceivers should define both.|
-|PhysicalGenericNetworkStruct|MaxHopCount, DefaultMaxLinkRange, Latency, Bandwidth, Reliability|Characteristics of a generic physical network.|
-|PhysicalUndefinedNetworkStruct||(Empty) Characteristics of an undefined physical network.|
-|RequestedConnection|CommunicationNetworkName, RequestedConnectionType, ConnectionId, DestinationEntityIds, NetworkDeviceId|Characterisation of a requested connection.|
-        
-### Variant Record Datatype
-|Name|Discriminant (Datatype)|Alternatives|Semantics|
-|---|---|---|---|
-|NetworkDeviceReceiverCharacteristicsVariant|Type (PhysicalNetworkTypeEnum)|NoNetwork, Undefined, Generic|Characteristics of a network device receiver.|
-|NetworkDeviceTransmitterCharacteristicsVariant|Type (PhysicalNetworkTypeEnum)|NoNetwork, Undefined, Generic|Characteristics of network device transmitter.|
-|PhysicalNetworkDescriptionVariant|Type (PhysicalNetworkTypeEnum)|Undefined, Generic|Characteristics of physical networks depend on their type.|
+
+|Name|Semantics|
+|---|---|
+|BitsPerSecond|Data transfer rate.|
+|CommunicationNetworkArray|References to a set of communication networks.|
+|CommunicationNetworkTypeEnum|The type of communication network.|
+|CommunicationServiceTypeEnum|The type of service used on a communication network. Service types as defined in MSDL. DATTRF: Data transfer FAX: Facsimile IFF: Identify Friend or Foe IMAGE: Image MCI: Multilateral Interoperability Programme (MIP) Common Interface Service MHS: Message Handling Service TDL: Tactical Data Link VIDSVC: Video Service VOCSVC: Voice Service NOS: Not Otherwise Specified|
+|ConnectionReceiverArray|Connection characteristics for a number of receivers.|
+|ConnectionReceiverStruct|Characteristics of a connection to a receiver.|
+|ConnectionTypeEnum|The type of connection.|
+|IncomingConnectionArray|A set of incoming connections.|
+|IncomingConnectionStruct|Characteristics of a specific incoming connection.|
+|LinkStatusArray|The status of physical network links.|
+|LinkStatusStruct|Status of a physical network link.|
+|NetworkDeviceArray|A set of network devices.|
+|NetworkDeviceEmptyCharactersticsStruct|Empty placeholder for future network device characteristics.|
+|NetworkDeviceGenericTransmitterCharacteristicsStruct|Generic description of network device transmitter.|
+|NetworkDeviceReceiverCharacteristicsVariant|Characteristics of a network device receiver.|
+|NetworkDeviceStruct|Describes the type and capability of a network device. Each device must have at least a transmitter (TX) or receiver (RX). Transceivers should define both.|
+|NetworkDeviceTransmitterCharacteristicsVariant|Characteristics of network device transmitter.|
+|PhysicalGenericNetworkStruct|Characteristics of a generic physical network.|
+|PhysicalNetworkDescriptionVariant|Characteristics of physical networks depend on their type.|
+|PhysicalNetworkTypeEnum|The type of a physical network.|
+|PhysicalUndefinedNetworkStruct|(Empty) Characteristics of an undefined physical network.|
+|RequestedConnection|Characterisation of a requested connection.|
+|RequestedConnectionArray|Characterisation of a set of requested connections.|
