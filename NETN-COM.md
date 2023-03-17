@@ -28,7 +28,7 @@ By separating the representation of the physical- and communication network laye
 
 The model does not require all levels and networks to be represented in the federation. Which objects are needed depends on the federation design and allocation of modelling responsibilities. E.g. at the application layer, only the connection information needs to be published.
 
-<img src="./images/Overview.png" width="85%"/>
+<img src="./images/objectclasses.png" width="85%"/>
 
 Figure. Object Classes
 
