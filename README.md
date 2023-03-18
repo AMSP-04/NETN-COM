@@ -1,4 +1,12 @@
 # NETN-COM
+
+
+|Version| Date| Dependencies|
+|---|---|---|
+|1.1|2023-03-07|NETN-BASE|
+
+> [Full Documentation](NETN-COM.md)
+
 The purpose of the NATO Education and Training Network (NETN) Communication Network (COM) Module is to provide a standard way to exchange data related to Communication Networks and Physical Networks. The main objective is to provide a generic model that represents the status of connections in a communication network and links in a physical network. The Communication Networks can be set up to use radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.
         
 
@@ -29,12 +37,8 @@ Version numbering of this FOM Module and associated documentation is based on th
 
 |Version|
 |---|
-|1.0.0 - Initial version developed by MSG-164 and MSG-163 for NETN-FOM v3.0|
-|1.1.0 - Version developed by MSG-191 for NATO FOM v4.0|
+|1.0 - Initial version developed by MSG-164 and MSG-163 for NETN-FOM v3.0|
+|1.1 - Version developed by MSG-191 for NATO FOM v4.0|
 
-[Changelog](changelog.md)
-
-## Documentation
-
-[Full Documentation](NETN-COM.md)
+> [Changelog](changelog.md)
 
