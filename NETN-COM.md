@@ -22,6 +22,35 @@ The following definition of terms is used in the NETN-FOM module:
 
 <img src="./images/Concepts.png" width="100%"/>
 
+```mermaid
+
+classDiagram
+Connection --> "1" CommunicationNetwork
+Connection --> "1" Entity
+    CommunicationNode --> "1" Entity
+ 
+  LinkStates --> "1" PhysicalNetwork
+
+class LinkStates {
+       Links
+    }
+    class Connection {
+       Receivers
+    }
+
+    class CommunicationNode {
+       RequestedConnections
+       IncomingConnections
+       NetworkDevices
+    }
+
+    note for LinkStates "Quality of links between \n network devices in a \nphysical network"
+    note for Connection "Logical connections from \n an entity to all receivers \n in a comunication network"
+    note for CommunicationNode "Quality of incoming connections"
+    note for Entity "NETN-MRM Aggregate or\nNETN-Physical Platform"
+```
+
+
 
 
 By separating the representation of the physical- and communication network layers, different simulations can be used to model the system on different levels, e.g. radio signal propagation simulations for the link layer and an ad hoc network routing simulation on the connection layer.
