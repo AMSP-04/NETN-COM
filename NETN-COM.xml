@@ -690,7 +690,7 @@ NOS: Not Otherwise Specified</semantics>
                 <field>
                     <name>Bandwidth</name>
                     <dataType>BitsPerSecond</dataType>
-                    <semantics>The bandwith of the connection to the receiving entity,</semantics>
+                    <semantics>The bandwidth of the connection to the receiving entity,</semantics>
                 </field>
                 <field>
                     <name>Reliability</name>
