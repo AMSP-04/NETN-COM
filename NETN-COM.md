@@ -50,22 +50,26 @@ class LinkStates {
     note for Entity "NETN-MRM Aggregate or\nNETN-Physical Platform"
 ```
 
-
-
-
 By separating the representation of the physical- and communication network layers, different simulations can be used to model the system on different levels, e.g. radio signal propagation simulations for the link layer and an ad hoc network routing simulation on the connection layer.
 
 The model does not require all levels and networks to be represented in the federation. Which objects are needed depends on the federation design and allocation of modelling responsibilities. E.g. at the application layer, only the connection information needs to be published.
 
 The application layer should only use the `CommunicationNode` and `Connection` objects to determine if data can be sent or received. If no `Connection` object exists or if the `Receivers` attribute is empty, the sender can drop the data entirely. A receiver should drop any incoming messages if not included in the `Receivers` attribute of the corresponding `Connection` object. If the `IncommingConnections` attribute of a `CommunicationNode` is calculated for a receiver, it can be used to determine if incoming data should be dropped or not.
 
-
 ## Object Classes
 
 Note that inherited and dependency parameters are not explicitly listed for each interaction class below. Only parameters defined in this FOM Module are listed. 
 
-<img src="./images/objectclasses.png">
-
+```mermaid
+graph RL
+COM_Root --> HLAobjectRoot
+CommunicationNetwork --> COM_Root
+CommunicationNode --> COM_Root
+Connection --> COM_Root
+PhysicalNetwork --> COM_Root
+LinkStates --> COM_Root
+DisruptionEffect --> COM_Root
+```
 
 ### CommunicationNetwork
 
