@@ -241,7 +241,7 @@ If the referenced entity does not exist in the federation, the location of the n
                     <sharing>PublishSubscribe</sharing>
                     <semantics>The `PhysicalNetwork` object class represents type-specific parameters/constraints for a physical network. Physical networks are simulated by `LinkState` objects and do not require that an instance of PhysicalNetwork exist in the federation.</semantics>
                     <attribute>
-                        <name>UniqueName</name>
+                        <name>Name</name>
                         <dataType>Text64</dataType>
                         <updateType>Static</updateType>
                         <updateCondition>NA</updateCondition>
@@ -398,19 +398,9 @@ The `LinkStates` provides information that can be used to calculate connections.
                     <order>Receive</order>
                     <semantics>Tasking of an entity to introduce a communication network disruption.</semantics>
                     <parameter>
-                        <name>CommunicationNetwork</name>
-                        <dataType>UUID</dataType>
-                        <semantics>Required. Reference to the affected Communication Network. If not provided all communication networks are affected.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>Area</name>
-                        <dataType>LocationStructArray</dataType>
-                        <semantics>Optional. Area affected by disruption.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>DisruptionEnabled</name>
-                        <dataType>HLAboolean</dataType>
-                        <semantics>Optional. Disruption enabled or disabled. Default is True = Enabled.</semantics>
+                        <name>TaskParameters</name>
+                        <dataType>DisruptCommunicationTaskStruct</dataType>
+                        <semantics>Required: Task parameters.</semantics>
                     </parameter>
                 </interactionClass>
                 <interactionClass>
@@ -420,9 +410,9 @@ The `LinkStates` provides information that can be used to calculate connections.
                     <order>Receive</order>
                     <semantics>Tasking of an entity to switch on/off all of its transmitters.</semantics>
                     <parameter>
-                        <name>Status</name>
-                        <dataType>TransmitterOperationalStatusEnum8</dataType>
-                        <semantics>Required. Status on the transmitter.</semantics>
+                        <name>TaskParameters</name>
+                        <dataType>SetTransmitterStatusTaskStruct</dataType>
+                        <semantics>Required: Task parameters.</semantics>
                     </parameter>
                 </interactionClass>
             </interactionClass>
@@ -664,7 +654,7 @@ NOS: Not Otherwise Specified</semantics>
         </arrayDataTypes>
         <fixedRecordDataTypes>
             <fixedRecordData>
-                <name>DisruptCommunicationTaskDefinition</name>
+                <name>DisruptCommunicationTaskStruct</name>
                 <encoding>HLAfixedRecord</encoding>
                 <semantics>Task specific data for DisruptCommuncation</semantics>
                 <field>
@@ -922,7 +912,7 @@ NOS: Not Otherwise Specified</semantics>
                 <alternative>
                     <enumerator>DisruptCommunication</enumerator>
                     <name>DisruptCommunication</name>
-                    <dataType>DisruptCommunicationTaskDefinition</dataType>
+                    <dataType>DisruptCommunicationTaskStruct</dataType>
                     <semantics>Task parameters.</semantics>
                 </alternative>
                 <alternative>
@@ -931,7 +921,7 @@ NOS: Not Otherwise Specified</semantics>
                     <dataType>SetTransmitterStatusTaskStruct</dataType>
                     <semantics>Task parameters.</semantics>
                 </alternative>
-                <encoding>HLAvariantRecord</encoding>
+                <encoding>HLAextendableVariantRecord</encoding>
                 <semantics>Variant record for task definition data.</semantics>
             </variantRecordData>
             <variantRecordData>
@@ -1013,13 +1003,12 @@ NOS: Not Otherwise Specified</semantics>
                     <dataType>ElapsedTimeProgress</dataType>
                     <semantics>Progress parameters.</semantics>
                 </alternative>
-                <encoding>HLAvariantRecord</encoding>
+                <encoding>HLAextendableVariantRecord</encoding>
                 <semantics>Variant record for task progress data.</semantics>
             </variantRecordData>
         </variantRecordDataTypes>
     </dataTypes>
     <notes>
-  
         <note>
             <label>netn-com_3</label>
             <semantics>Data transfer</semantics>
@@ -1060,7 +1049,6 @@ NOS: Not Otherwise Specified</semantics>
             <label>netn-com_12</label>
             <semantics>Not Otherwise Specified</semantics>
         </note>
-
         <note>
             <label>netn-com_2</label>
             <semantics>* Replaced all `WorldLocationStruct` with `LocationStruct` 
