@@ -37,8 +37,8 @@ Version numbering of this FOM Module and associated documentation is based on th
 
 |Version|
 |---|
-|1.0 - Initial version developed by MSG-164 and MSG-163 for NETN-FOM v3.0|
-|1.1 - Version developed by MSG-191 for NATO FOM v4.0|
+|1.0 - Initial version developed by MSG-164 and MSG-163 for NETN FOM v3.0|
+|1.1 - Version developed by MSG-191 for NETN FOM v4.0|
 
 > [Changelog](changelog.md)
 

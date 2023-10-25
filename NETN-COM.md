@@ -10,7 +10,7 @@ The NETN-COM module distinguishes between three layers of networks.
 2. **Connection Layer:** This layer corresponds to OSI layers 3-4 and describes the connections associated with communication networks. `CommunicationNode` objects are associated with simulated entities and connected to form an information-sharing space.
 3. **Link Layer:** This layer corresponds to OSI layers 1-2 and is used to define the link quality parameters between nodes to form a physical network.
 
-The following definition of terms is used in the NETN-FOM module:
+The following definition of terms is used in the NETN FOM module:
 
 * **Entity:** A entity is either a simulated physical or an aggregated entity.
 * **Communication network:** A group of communication nodes exchanging messages using a uniquely named logical network which is independent of the physical network implementation. A communication network is the foundation of a shared information space.

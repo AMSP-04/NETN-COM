@@ -1,10 +1,10 @@
 ## Changelog NETN-COM
 
-### 1.0 - Initial version developed by MSG-164 and MSG-163 for NETN-FOM v3.0
+### 1.0 - Initial version developed by MSG-164 and MSG-163 for NETN FOM v3.0
 
 
 
-### 1.1 - Version developed by MSG-191 for NATO FOM v4.0
+### 1.1 - Version developed by MSG-191 for NETN FOM v4.0
 
 * Replaced all `WorldLocationStruct` with `LocationStruct` 
 * Replaced all use of datatype `PercentFloat64` with `PercentFloat32` 
