@@ -396,28 +396,31 @@ The `LinkStates` provides information that can be used to calculate connections.
                     <semantics>Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.</semantics>
                 </parameter>
                 <interactionClass>
-                    <name>DisruptCommunication</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>Tasking of an entity to introduce a communication network disruption.</semantics>
-                    <parameter>
-                        <name>TaskParameters</name>
-                        <dataType>DisruptCommunicationTaskStruct</dataType>
-                        <semantics>Required: Task parameters.</semantics>
-                    </parameter>
-                </interactionClass>
-                <interactionClass>
-                    <name>SetTransmitterStatus</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>Tasking of an entity to switch on/off all of its transmitters.</semantics>
-                    <parameter>
-                        <name>TaskParameters</name>
-                        <dataType>SetTransmitterStatusTaskStruct</dataType>
-                        <semantics>Required: Task parameters.</semantics>
-                    </parameter>
+                    <name>RequestTask</name>
+                    <interactionClass>
+                        <name>SetTransmitterStatus</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Tasking of an entity to switch on/off all of its transmitters.</semantics>
+                        <parameter>
+                            <name>TaskParameters</name>
+                            <dataType>SetTransmitterStatusTaskStruct</dataType>
+                            <semantics>Required: Task parameters.</semantics>
+                        </parameter>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>DisruptCommunication</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Tasking of an entity to introduce a communication network disruption.</semantics>
+                        <parameter>
+                            <name>TaskParameters</name>
+                            <dataType>DisruptCommunicationTaskStruct</dataType>
+                            <semantics>Required: Task parameters.</semantics>
+                        </parameter>
+                    </interactionClass>
                 </interactionClass>
             </interactionClass>
             <interactionClass>
