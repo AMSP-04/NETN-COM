@@ -4,7 +4,7 @@
         <name>NETN-COM</name>
         <type>FOM</type>
         <version>2.0</version>
-        <modificationDate>2023-04-11</modificationDate>
+        <modificationDate>2023-11-19</modificationDate>
         <securityClassification>Not classified</securityClassification>
         <purpose>The purpose of the NATO Education and Training Network (NETN) Communication Network (COM) Module is to provide a standard way to exchange data related to Communication Networks and Physical Networks. The main objective is to provide a generic model that represents the status of connections in a communication network and links in a physical network. The Communication Networks can be set up to use radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.
         </purpose>
@@ -385,30 +385,18 @@ The `LinkStates` provides information that can be used to calculate connections.
         <interactionClass>
             <name>HLAinteractionRoot</name>
             <interactionClass>
-                <name>ETR_Task</name>
-                <sharing>Neither</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>Base interaction class related to the tasking of simulated entities and task management.</semantics>
-                <parameter>
-                    <name>CommunicationNetworks</name>
-                    <dataType>CommunicationNetworkArray</dataType>
-                    <semantics>Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.</semantics>
-                </parameter>
+                <name>SMC_EntityControl</name>
                 <interactionClass>
-                    <name>RequestTask</name>
-                    <interactionClass>
-                        <name>SetTransmitterStatus</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Tasking of an entity to switch on/off all of its transmitters.</semantics>
-                        <parameter>
-                            <name>TaskParameters</name>
-                            <dataType>SetTransmitterStatusTaskStruct</dataType>
-                            <semantics>Required: Task parameters.</semantics>
-                        </parameter>
-                    </interactionClass>
+                    <name>Task</name>
+                    <sharing>Neither</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Requests a simulated entity to perform some task based on a task description. If accepted, the federate application modelling the behaviour will execute the task per task parameters and scheduling. A request task is acknowledged using a `TaskStatusUpdate` response interaction. Resending a `RequestTask` with the same `TaskId` as a previously sent interaction is equivalent to cancelling and sending a new task.</semantics>
+                    <parameter>
+                        <name>CommunicationNetworks</name>
+                        <dataType>CommunicationNetworkArray</dataType>
+                        <semantics>Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.</semantics>
+                    </parameter>
                     <interactionClass>
                         <name>DisruptCommunication</name>
                         <sharing>PublishSubscribe</sharing>
@@ -421,19 +409,19 @@ The `LinkStates` provides information that can be used to calculate connections.
                             <semantics>Required: Task parameters.</semantics>
                         </parameter>
                     </interactionClass>
+                    <interactionClass>
+                        <name>SetTransmitterStatus</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Tasking of an entity to switch on/off all of its transmitters.</semantics>
+                        <parameter>
+                            <name>TaskParameters</name>
+                            <dataType>SetTransmitterStatusTaskStruct</dataType>
+                            <semantics>Required: Task parameters.</semantics>
+                        </parameter>
+                    </interactionClass>
                 </interactionClass>
-            </interactionClass>
-            <interactionClass>
-                <name>ETR_Report</name>
-                <sharing>Neither</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>A base interaction class for more specialized report interaction classes. The inherited parameter `Time is required.`</semantics>
-                <parameter>
-                    <name>CommunicationNetworks</name>
-                    <dataType>CommunicationNetworkArray</dataType>
-                    <semantics>Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.</semantics>
-                </parameter>
             </interactionClass>
         </interactionClass>
     </interactions>
@@ -595,9 +583,9 @@ NOS: Not Otherwise Specified</semantics>
                 </enumerator>
             </enumeratedData>
             <enumeratedData>
-                <name>TaskTypeEnum</name>
+                <name>EntityControlActionEnum</name>
                 <representation>HLAinteger32BE</representation>
-                <semantics>Task types.</semantics>
+                <semantics>Control actions for entities.</semantics>
                 <enumerator>
                     <name>DisruptCommunication</name>
                     <value>19</value>
@@ -915,7 +903,7 @@ NOS: Not Otherwise Specified</semantics>
             <variantRecordData>
                 <name>TaskDefinitionVariantRecord</name>
                 <discriminant>TaskType</discriminant>
-                <dataType>TaskTypeEnum</dataType>
+                <dataType>EntityControlActionEnum</dataType>
                 <alternative>
                     <enumerator>DisruptCommunication</enumerator>
                     <name>DisruptCommunication</name>
@@ -1003,7 +991,7 @@ NOS: Not Otherwise Specified</semantics>
             <variantRecordData>
                 <name>TaskProgressVariantRecord</name>
                 <discriminant>TaskType</discriminant>
-                <dataType>TaskTypeEnum</dataType>
+                <dataType>EntityControlActionEnum</dataType>
                 <alternative>
                     <enumerator>DisruptCommunication</enumerator>
                     <name>COM_ElapsedTime</name>
@@ -1065,8 +1053,8 @@ NOS: Not Otherwise Specified</semantics>
 * Renamed field `Bandwith`in Fixed Record `ConnectionReceiverStruct`to `Bandwidth` 
 * Added interaction class `DisruptCommunication` 
 * Change datatype `CommunicationNetworkArray` element to `UUID` 
-* Added `ETR_Task` parameter `CommunicationNetworks` 
-* Added datatype `TaskTypeEnum` 
+* Added `Task` parameter `CommunicationNetworks` 
+* Added datatype `EntityControlActionEnum` 
 * Added datatype `TaskDefinitionVariantRecord` 
 * Renamed Connection attribute CommunicationNetworkName to CommunicationNetwork 
 * Changed datatype of Connection attribute CommunicationNetwork to UUID 
