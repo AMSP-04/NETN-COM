@@ -14,22 +14,47 @@ This module is a specification of how to represent Communication Networks and re
 
 ## Object Classes
 
-Note that inherited and dependency attributes are not included in the description of object classes.
-
 ```mermaid
-graph RL
-COM_Root-->HLAobjectRoot
-ORG_Root-->HLAobjectRoot
-CommunicationNetwork-->COM_Root
-CommunicationNode-->COM_Root
-Connection-->COM_Root
-PhysicalNetwork-->COM_Root
-LinkStates-->COM_Root
-DisruptionEffect-->COM_Root
-OrganizationElement-->ORG_Root
-Unit-->OrganizationElement
-Equipment-->OrganizationElement
+classDiagram 
+direction LR
+
+HLAobjectRoot <|-- COM_Root
+HLAobjectRoot <|-- ORG_Root
+COM_Root <|-- CommunicationNetwork
+COM_Root <|-- CommunicationNode
+COM_Root <|-- Connection
+COM_Root <|-- PhysicalNetwork
+COM_Root <|-- LinkStates
+COM_Root <|-- DisruptionEffect
+CommunicationNetwork : Name
+CommunicationNetwork : NetworkType
+CommunicationNetwork : ServiceType
+CommunicationNode : HostEntity
+CommunicationNode : IncomingConnections
+CommunicationNode : Location
+CommunicationNode : NetworkDevices
+CommunicationNode : RequestedConnections
+Connection : CommunicationNetwork
+Connection : Receivers
+Connection : SenderEntity
+PhysicalNetwork : Description
+PhysicalNetwork : Name
+LinkStates : Links
+LinkStates : PhysicalNetwork
+DisruptionEffect : Area
+DisruptionEffect : Effect
+DisruptionEffect : Networks
+ORG_Root <|-- OrganizationElement
+OrganizationElement <|-- Unit
+OrganizationElement <|-- Equipment
+Unit : CommunicationNetworks
+Equipment : CommunicationNetworks
 ```
+
+### COM_Root
+
+Abstract root class for all NETN-COM objects.
+
 
 ### CommunicationNetwork
 
@@ -83,10 +108,10 @@ Before any data can be sent using a connection, it must have been requested, and
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |HostEntity|UUID|Required. Reference by UUID to an object instance of one of the following classes: <br/> <br/>* NETN-MRM Aggregate Entity <br/>* NETN-Physical extensions of RPR Physical Entities. <br/> <br/>If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. <br/>If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute.|
-|Location|LocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
-|RequestedConnections|RequestedConnectionArray|Required. Possible (requested) connections for the communication node.|
-|NetworkDevices|NetworkDeviceArray|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
 |IncomingConnections|IncomingConnectionArray|Optional. Description of all incoming connections to the receiving entity.|
+|Location|LocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
+|NetworkDevices|NetworkDeviceArray|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
+|RequestedConnections|RequestedConnectionArray|Required. Possible (requested) connections for the communication node.|
 
 ### Connection
 
@@ -95,8 +120,8 @@ A connection object describes the communication capability of each entity to all
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |CommunicationNetwork|UUID|Required. A reference to the communication network this connection belongs to.|
-|SenderEntity|UUID|Required. A reference to the entity sending data using this connection.|
 |Receivers|ConnectionReceiverArray|Required. Characteristics of the connections to individual receiving entities.|
+|SenderEntity|UUID|Required. A reference to the entity sending data using this connection.|
 
 ### PhysicalNetwork
 
@@ -104,8 +129,8 @@ The `PhysicalNetwork` object class represents type-specific parameters/constrain
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|Name|HLAunicodeString|Required. Unique physical network name. Uniqueness in the context of physical networks.|
 |Description|PhysicalNetworkDescriptionVariant|Required. Characteristics of the physical network.|
+|Name|HLAunicodeString|Required. Unique physical network name. Uniqueness in the context of physical networks.|
 
 ### LinkStates
 
@@ -121,8 +146,8 @@ The `LinkStates` provides information that can be used to calculate connections.
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|PhysicalNetwork|UUID|Required. Reference to a physical network.|
 |Links|LinkStatusArray|Required. Status of a set of physical network links.|
+|PhysicalNetwork|UUID|Required. Reference to a physical network.|
 
 ### DisruptionEffect
 
@@ -130,9 +155,9 @@ The `DisruptionEffect` object class is used to represent the disruption of conne
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|Networks|ArrayOfUuid|Optional. Reference to all affected communication networks. If not provided all networks in the specified area are affected.|
 |Area|LocationStructArray|Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.|
 |Effect|PercentFloat32|Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
+|Networks|ArrayOfUuid|Optional. Reference to all affected communication networks. If not provided all networks in the specified area are affected.|
 
 ### Unit
 
@@ -152,20 +177,17 @@ An equipment represents individual physical items defined specifically and apart
 
 ## Interaction Classes
 
-Note that inherited and dependency parameters are not included in the description of interaction classes.
-
 ```mermaid
-graph RL
-SMC_EntityControl-->HLAinteractionRoot
-Task-->SMC_EntityControl
-DisruptCommunication-->Task
-SetTransmitterStatus-->Task
+classDiagram 
+direction LR
+HLAinteractionRoot <|-- SMC_EntityControl
+SMC_EntityControl <|-- Task
+Task <|-- DisruptCommunication
+Task <|-- SetTransmitterStatus
+Task : CommunicationNetworks
+DisruptCommunication : TaskParameters
+SetTransmitterStatus : TaskParameters
 ```
-
-### SMC_EntityControl
-
-
-
 
 ### Task
 
@@ -181,6 +203,7 @@ Tasking of an entity to introduce a communication network disruption.
 
 |Parameter|Datatype|Semantics|
 |---|---|---|
+|CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.|
 |TaskParameters|DisruptCommunicationTaskStruct|Required: Task parameters.|
 
 ### SetTransmitterStatus
@@ -189,6 +212,7 @@ Tasking of an entity to switch on/off all of its transmitters.
 
 |Parameter|Datatype|Semantics|
 |---|---|---|
+|CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.|
 |TaskParameters|SetTransmitterStatusTaskStruct|Required: Task parameters.|
 
 ## Datatypes
