@@ -20,6 +20,7 @@ direction LR
 
 HLAobjectRoot <|-- COM_Root
 HLAobjectRoot <|-- ORG_Root
+HLAobjectRoot : UniqueId(NETN-BASE)
 COM_Root <|-- CommunicationNetwork
 COM_Root <|-- CommunicationNode
 COM_Root <|-- Connection
@@ -45,8 +46,13 @@ DisruptionEffect : Area
 DisruptionEffect : Effect
 DisruptionEffect : Networks
 ORG_Root <|-- OrganizationElement
+ORG_Root : Name(NETN-ORG)
 OrganizationElement <|-- Unit
 OrganizationElement <|-- Equipment
+OrganizationElement : EntityType(NETN-ORG)
+OrganizationElement : Organization(NETN-ORG)
+OrganizationElement : SuperiorUnit(NETN-ORG)
+OrganizationElement : Symbol(NETN-ORG)
 Unit : CommunicationNetworks
 Equipment : CommunicationNetworks
 ```
@@ -66,6 +72,7 @@ Instances of this object class should be considered optional. No federate should
 |Name|HLAunicodeString|Required. Communication network name. Unique in the context of communication networks.|
 |NetworkType|CommunicationNetworkTypeEnum|Optional. The communication network type of use.|
 |ServiceType|CommunicationServiceTypeEnum|Optional. The type of service used on the communication network.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### CommunicationNode
 
@@ -112,6 +119,7 @@ Before any data can be sent using a connection, it must have been requested, and
 |Location|LocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
 |NetworkDevices|NetworkDeviceArray|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
 |RequestedConnections|RequestedConnectionArray|Required. Possible (requested) connections for the communication node.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### Connection
 
@@ -122,6 +130,7 @@ A connection object describes the communication capability of each entity to all
 |CommunicationNetwork|UUID|Required. A reference to the communication network this connection belongs to.|
 |Receivers|ConnectionReceiverArray|Required. Characteristics of the connections to individual receiving entities.|
 |SenderEntity|UUID|Required. A reference to the entity sending data using this connection.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### PhysicalNetwork
 
@@ -131,6 +140,7 @@ The `PhysicalNetwork` object class represents type-specific parameters/constrain
 |---|---|---|
 |Description|PhysicalNetworkDescriptionVariant|Required. Characteristics of the physical network.|
 |Name|HLAunicodeString|Required. Unique physical network name. Uniqueness in the context of physical networks.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### LinkStates
 
@@ -148,6 +158,7 @@ The `LinkStates` provides information that can be used to calculate connections.
 |---|---|---|
 |Links|LinkStatusArray|Required. Status of a set of physical network links.|
 |PhysicalNetwork|UUID|Required. Reference to a physical network.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### DisruptionEffect
 
@@ -158,6 +169,7 @@ The `DisruptionEffect` object class is used to represent the disruption of conne
 |Area|LocationStructArray|Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.|
 |Effect|PercentFloat32|Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
 |Networks|ArrayOfUuid|Optional. Reference to all affected communication networks. If not provided all networks in the specified area are affected.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### Unit
 
@@ -166,6 +178,12 @@ A unit represents an element at a specified level in the organization. An organi
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |CommunicationNetworks|ArrayOfCommunicationNetworks|Optional: A list of communication networks available for the unit.|
+|EntityType<br/>(NETN-ORG)|EntityTypeStruct|Required. SISO-REF-010 code for entity type definitions. If unknown, use 0.0.0.0.0.0.0.| 
+|Name<br/>(NETN-ORG)|HLAunicodeString|Required. Required. A unique name.| 
+|Organization<br/>(NETN-ORG)|UUID|Required: A reference to the organization the element is affiliated with.| 
+|SuperiorUnit<br/>(NETN-ORG)|UUID|Required: A reference to a unit within the organization for which this element is a subunit/equipment or controlled installation.  The default value is all zeros (no aggregate unit).| 
+|Symbol<br/>(NETN-ORG)|SymbolStruct|Required. Initial symbol identifier and amplification data for this element. In NETN-ORG the symbol identifier acts as a template and may contain wildcard characters '*' to indicate undefined elements of the symbol code.| 
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### Equipment
 
@@ -174,6 +192,12 @@ An equipment represents individual physical items defined specifically and apart
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |CommunicationNetworks|ArrayOfCommunicationNetworks|Optional: A list of communication networks available for the unit.|
+|EntityType<br/>(NETN-ORG)|EntityTypeStruct|Required. SISO-REF-010 code for entity type definitions. If unknown, use 0.0.0.0.0.0.0.| 
+|Name<br/>(NETN-ORG)|HLAunicodeString|Required. Required. A unique name.| 
+|Organization<br/>(NETN-ORG)|UUID|Required: A reference to the organization the element is affiliated with.| 
+|SuperiorUnit<br/>(NETN-ORG)|UUID|Required: A reference to a unit within the organization for which this element is a subunit/equipment or controlled installation.  The default value is all zeros (no aggregate unit).| 
+|Symbol<br/>(NETN-ORG)|SymbolStruct|Required. Initial symbol identifier and amplification data for this element. In NETN-ORG the symbol identifier acts as a template and may contain wildcard characters '*' to indicate undefined elements of the symbol code.| 
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ## Interaction Classes
 
@@ -182,9 +206,11 @@ classDiagram
 direction LR
 HLAinteractionRoot <|-- SMC_EntityControl
 SMC_EntityControl <|-- Task
+SMC_EntityControl : Entity(NETN-SMC)
 Task <|-- DisruptCommunication
 Task <|-- SetTransmitterStatus
 Task : CommunicationNetworks
+Task : TaskId(NETN-ETR)
 DisruptCommunication : TaskParameters
 SetTransmitterStatus : TaskParameters
 ```
@@ -196,6 +222,8 @@ Requests a simulated entity to perform some task based on a task description. If
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.|
+|Entity<br/>(NETN-SMC)|UUID|Required: Reference to a simulation entity for which the control action is intended.| 
+|TaskId<br/>(NETN-ETR)|UUID|Required. Unique identifier for the task.| 
 
 ### DisruptCommunication
 
@@ -205,6 +233,8 @@ Tasking of an entity to introduce a communication network disruption.
 |---|---|---|
 |CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.|
 |TaskParameters|DisruptCommunicationTaskStruct|Required: Task parameters.|
+|Entity<br/>(NETN-SMC)|UUID|Required: Reference to a simulation entity for which the control action is intended.| 
+|TaskId<br/>(NETN-ETR)|UUID|Required. Unique identifier for the task.| 
 
 ### SetTransmitterStatus
 
@@ -214,6 +244,8 @@ Tasking of an entity to switch on/off all of its transmitters.
 |---|---|---|
 |CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer tasking messages. If not provided, the task transmission should not be modelled and federates should receive and act on the task messages directly.|
 |TaskParameters|SetTransmitterStatusTaskStruct|Required: Task parameters.|
+|Entity<br/>(NETN-SMC)|UUID|Required: Reference to a simulation entity for which the control action is intended.| 
+|TaskId<br/>(NETN-ETR)|UUID|Required. Unique identifier for the task.| 
 
 ## Datatypes
 
