@@ -3,12 +3,11 @@
 
 |Version| Date| Dependencies|
 |---|---|---|
-|2.0|2023-11-19|NETN-BASE, NETN-ETR, NETN-ORG|
+|2.0|2024-03-03|NETN-BASE, NETN-ETR, NETN-ORG|
 
 > [Full Documentation](NETN-COM.md)
 
-The purpose of the NATO Education and Training Network (NETN) Communication Network (COM) Module is to provide a standard way to exchange data related to Communication Networks and Physical Networks. The main objective is to provide a generic model that represents the status of connections in a communication network and links in a physical network. The Communication Networks can be set up to use radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.
-        
+The purpose of the NATO Education and Training Network Communication Network Module (NETN-COM) is to provide a standard way to exchange data related to the status of connections in a communication network and links in a physical network. The communication networks can be modelled using radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.         
 
 This module is a specification of how to represent Communication Networks and related connectivity data to be shared among participants in a federated distributed simulation. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and how it is encoded on the network. The NETN-COM FOM module is available as an XML file for use in HLA-based federations.
 

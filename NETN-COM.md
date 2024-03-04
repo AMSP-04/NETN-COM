@@ -2,12 +2,210 @@
 # NETN-COM
 |Version| Date| Dependencies|
 |---|---|---|
-|2.0|2023-11-19|NETN-BASE, NETN-ETR, NETN-ORG|
+|2.0|2024-03-03|NETN-BASE, NETN-ETR, NETN-ORG|
 
-The purpose of the NATO Education and Training Network (NETN) Communication Network (COM) Module is to provide a standard way to exchange data related to Communication Networks and Physical Networks. The main objective is to provide a generic model that represents the status of connections in a communication network and links in a physical network. The Communication Networks can be set up to use radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.
-        
+The purpose of the NATO Education and Training Network Communication Network Module (NETN-COM) is to provide a standard way to exchange data related to the status of connections in a communication network and links in a physical network. The communication networks can be modelled using radios, ethernet, satellite communication or laser-based links, transmitting from point to point or routing through the network.         
 
 This module is a specification of how to represent Communication Networks and related connectivity data to be shared among participants in a federated distributed simulation. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and how it is encoded on the network. The NETN-COM FOM module is available as an XML file for use in HLA-based federations.
+
+
+
+## Overview 
+ 
+The NETN-COM module distinguishes between three layers of networks. 
+* **Application Layer** - This is the topmost layer and corresponds to OSI layers 5-7. This layer is represented in the NETN-COM object model by the `CommunicationNetwork` object and the `IncommingConnections` attribute which extends the RPR-FOM `BaseEntity` object class. The NETN-COM also defines extensions to the NETN-ETR `Task` and `ETR_Report` interaction classes to allow federates to associate communication networks with these messages. Receivers use the  `IncommingConnections` attribute to determine if the message can be successfully delivered or not. 
+* **Connection Layer** - This layer corresponds to OSI layers 3-4 and describes the connections associated with communication networks. `CommunicationNode` objects are associated with simulated entities and connected to form an information-sharing space. 
+* **Link Layer** - This layer corresponds to OSI layers 1-2 and is used to define the link quality parameters between nodes to form a physical network. 
+ 
+ 
+By separating the representation of the application, connection, and physical layers, different simulations can be used to model the system on different levels, e.g. radio signal propagation simulations for the link layer and an ad hoc network routing simulation on the connection layer. 
+ 
+The model does not require all levels and networks to be represented in the federation. Which objects are needed depends on the federation design and allocation of modelling responsibilities. 
+
+ 
+## Application Layer 
+ 
+A `CommunicationNetwork` is a logical network grouping simulated entities, independent of any physical network implementation. When sending messages through a network, all entities belonging to it are potential receivers of the message. 
+ 
+To determine if a message is received or not, each simulated entity can use data related to its `IncommingConnections`. This attribute describes all connections for all communication networks associated with the simulated entity. Each connection specifies the `SenderEntity` and quality parameters, e.g., latency & bandwidth, that allow the receiver to calculate block, drop and degradation effects. 
+ 
+The `IncommingConnections` attribute can be published by other simulations that model communication at the connection- and physical level. 
+ 
+```mermaid 
+classDiagram 
+direction LR 
+ 
+
+
+BaseEntity *-- "0..*" Incomming Connection
+BaseEntity:IncommingConnection
+
+Incomming Connection:CommunicationNetwork
+Incomming Connection:SenderEntity
+Incomming Connection --> "1" CommunicationNetwork : CommunicationNetwork
+Incomming Connection:Latency
+Incomming Connection:Bandwith
+Incomming Connection:Reliability
+Incomming Connection:HopCount
+Incomming Connection --> BaseEntity:SenderEntity
+
+
+CommunicationNetwork:Name
+CommunicationNetwork:ServiceType
+CommunicationNetwork:NetworkType
+
+
+BaseEntity:UniqueId(NETN-BASE)
+CommunicationNetwork:UniqueId(NETN-BASE)
+``` 
+ 
+ 
+The NETN-COM module currently supports sending messages with associated `CommunicationNetwork` information using NETN-ETR `Task` and `ETR_Report` interactions. 
+ 
+ 
+```mermaid 
+classDiagram 
+direction LR 
+ 
+HLAinteractionRoot <|-- SMC_EntityControl 
+SMC_EntityControl <|-- Task 
+HLAinteractionRoot <|-- ETR_Report 
+ 
+ 
+Task:CommunicationNetworks 
+SMC_EntityControl:Entity(NETN-SMC) 
+Task:TaskId(NETN-ETR) 
+ETR_Report:CommunicationNetworks 
+ETR_Report:ReportId(NETN-ETR) 
+ETR_Report:ReportingEntity(NETN-ETR) 
+ETR_Report:ReportingEntity(NETN-ETR) 
+ETR_Report:TimeStamp(NETN-ETR) 
+``` 
+ 
+ 
+ 
+## Connection Layer 
+ 
+The `CommunicationNode` represents a node in a logical communication network. Each node publishes `RequestedConnections` to describe all desired connectivity between nodes in the network. Each node is also associated with a simulated entity and available network devices. 
+ 
+```mermaid 
+classDiagram 
+direction LR 
+
+CommunicationNode:HostEntity
+CommunicationNode:Location
+CommunicationNode:RequestedConnections
+CommunicationNode: UniqueId(NETN-BASE)
+
+
+CommunicationNode --> "1" BaseEntity : HostEntity
+
+
+
+
+BaseEntity:UniqueId
+
+NetworkDevice:Id
+
+CommunicationNode:NetworkDevices
+CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice
+
+
+
+RequestedConnection:CommunicationNetwork
+RequestedConnection:RequestedConnectionType
+RequestedConnection:ConnectionId
+RequestedConnection:DestinationEntities
+RequestedConnection:NetworkDevice
+RequestedConnection --> "1" NetworkDevice : NetworkDevice
+RequestedConnection --> "1" BaseEntity : DestinationEntities
+RequestedConnection --* "1..*" CommunicationNode
+
+``` 
+
+Based on the `RequestedConnection` and available devices a `Connection` may be established. Each `Connection` can be modelled as an individual objects with details of the connection quality for each potential receiver.
+
+
+```mermaid 
+classDiagram 
+direction LR 
+ 
+ 
+ 
+Connection: CommunicationNetwork 
+Connection: SenderEntity 
+Connection: Receivers 
+Connection: UniqueId(NETN-BASE) 
+ 
+CommunicationNetwork:Name 
+CommunicationNetwork:ServiceType 
+CommunicationNetwork:NetworkType 
+CommunicationNetwork:UniqueId(NETN-BASE) 
+ 
+
+Connection --> "1" CommunicationNetwork : CommunicationNetwork 
+Connection --> "1" BaseEntity : SenderEntity 
+Connection --* "1..*" Receiver 
+ 
+Receiver:ReceiverEntity 
+Receiver:Latency 
+Receiver:Bandwith 
+Receiver:Reliability 
+Receiver:HopCount 
+Receiver --> "1" BaseEntity:ReceiverEntity 
+ 
+BaseEntity:UniqueId 
+ 
+``` 
+ 
+
+
+## Physical Layer
+
+The physical layer models the `PhysicalNetwork` that implements the `LinkStates` between Network Devices. This is required to establish the connectivity required to create a `Connection` between `CommunicationNode`. 
+
+
+
+```mermaid 
+classDiagram 
+direction LR 
+
+
+
+PhysicalNetwork:Name
+PhysicalNetwork:Description
+PhysicalNetwork: UniqueId(NETN-BASE)
+
+
+LinkStates: PhysicalNetwork
+LinkStates: Links
+LinkStates: UniqueId(NETN-BASE)
+
+
+
+LinkStates --> "1" PhysicalNetwork : PhysicalNetwork
+LinkStates --> "1" LinkStatus : Link
+
+
+LinkStatus:TransmitterDevice
+LinkStatus:ReceiverDevice
+LinkStatus:Bandwith
+LinkStatus:Latency
+LinkStatus:Reliability
+LinkStatus:isBidirectional
+LinkStatus *-- "1" NetworkDevice:TransmitterDevice
+LinkStatus *--> "1" NetworkDevice:ReceiverDevice
+CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice
+
+NetworkDevice:Id
+
+CommunicationNode:NetworkDevices
+CommunicationNode: UniqueId(NETN-BASE)
+
+``` 
+
+A Network Device is a technical device, e.g., radio or ethernet, connecting a `CommunicationNode` to a physical network. The `LinkStates` provide all link status data related to a `PhysicalNetwork`. The link describes the relationship between a transmitting and a receiving network device. 
+
 
 
 
@@ -20,6 +218,7 @@ direction LR
 
 HLAobjectRoot <|-- COM_Root
 HLAobjectRoot <|-- ORG_Root
+HLAobjectRoot <|-- BaseEntity
 HLAobjectRoot : UniqueId(NETN-BASE)
 COM_Root <|-- CommunicationNetwork
 COM_Root <|-- CommunicationNode
@@ -31,7 +230,6 @@ CommunicationNetwork : Name
 CommunicationNetwork : NetworkType
 CommunicationNetwork : ServiceType
 CommunicationNode : HostEntity
-CommunicationNode : IncomingConnections
 CommunicationNode : Location
 CommunicationNode : NetworkDevices
 CommunicationNode : RequestedConnections
@@ -55,6 +253,7 @@ OrganizationElement : SuperiorUnit(NETN-ORG)
 OrganizationElement : Symbol(NETN-ORG)
 Unit : CommunicationNetworks
 Equipment : CommunicationNetworks
+BaseEntity : IncommingConnections
 ```
 
 ### COM_Root
@@ -108,15 +307,12 @@ Depending on the type of the requested connection the use of the associated netw
 * The DestinationEntityArray is ignored. 
 * **Intercepting connections**: 
 * These are special connections not related to specific destination entities but intercept all types of connections that are reachable by the corresponding device. In the case of broadcasts, this corresponds to a broadcast receiver, otherwise, this means the connection is routed through the corresponding device. 
-* The DestinationEntityArray is ignored. 
- 
-Before any data can be sent using a connection, it must have been requested, and the corresponding `Connection` object instance must exist in the federation.
+* The DestinationEntityArray is ignored.
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|HostEntity|UUID|Required. Reference by UUID to an object instance of one of the following classes: <br/> <br/>* NETN-MRM Aggregate Entity <br/>* NETN-Physical extensions of RPR Physical Entities. <br/> <br/>If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. <br/>If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute.|
-|IncomingConnections|IncomingConnectionArray|Optional. Description of all incoming connections to the receiving entity.|
-|Location|LocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by EntityId is not registered in the federation. If the entity referenced by EntityId exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
+|HostEntity|UUID|Optional. Reference to a simulation entity. If the referenced entity exists in the federation, the location of the node is derived from the location of the entity. <br/>If the referenced entity does not exist in the federation, the location of the node is defined by the Location attribute.|
+|Location|LocationStruct|Optional. Specifies the location of the `CommunicationNode` in case the entity referenced by `HostEntity` is not registered in the federation. If the referenced entity exists in the federation, the location of the communication node is derived from that entity and the value of the Location attribute shall be ignored.|
 |NetworkDevices|NetworkDeviceArray|Required. Available network devices define the association of a communication network (connection layer) with a physical network (link layer). Each network device can be associated with several communication networks but only one physical network. Each network device also describes the transmitter and receiver capabilities.|
 |RequestedConnections|RequestedConnectionArray|Required. Possible (requested) connections for the communication node.|
 |UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
@@ -168,7 +364,7 @@ The `DisruptionEffect` object class is used to represent the disruption of conne
 |---|---|---|
 |Area|LocationStructArray|Optional. The area affected by the disruption. If not provided the default is a global disruption and all connections are affected.|
 |Effect|PercentFloat32|Required. Level of disruption. 100% equals No connectivity and 0% no disruption effect. The level of disruption can vary over time.|
-|Networks|ArrayOfUuid|Optional. Reference to all affected communication networks. If not provided all networks in the specified area are affected.|
+|Networks|ArrayOfUuid|Optional. Reference to all affected physical and communication networks. If not provided all networks in the specified area are affected.|
 |UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ### Unit
@@ -199,12 +395,21 @@ An equipment represents individual physical items defined specifically and apart
 |Symbol<br/>(NETN-ORG)|SymbolStruct|Required. Initial symbol identifier and amplification data for this element. In NETN-ORG the symbol identifier acts as a template and may contain wildcard characters '*' to indicate undefined elements of the symbol code.| 
 |UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
+### BaseEntity
+
+A base class of aggregate and discrete scenario domain participants. The BaseEntity class is characterized by being located at a particular location in space and independently movable, if capable of movement at all. It specifically excludes elements normally considered to be a component of another element. The BaseEntity class is intended to be a container for common attributes for entities of this type. Since it lacks sufficient class specific attributes that are required for simulation purposes, federates cannot publish objects of this class. Certain simulation management federates, e.g. viewers, may subscribe to this class. Simulation federates will normally subscribe to one of the subclasses, to gain the extra information required to properly simulate the entity.
+
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|IncommingConnections|IncommingConnectionArray|Optional. All incoming communication connections to the receiving simulated entity. Any messages sent on a CommunicationNetwork with a Connection of sufficient quality should be received by this entity and processed if the entity is the intended recipient.|
+
 ## Interaction Classes
 
 ```mermaid
 classDiagram 
 direction LR
 HLAinteractionRoot <|-- SMC_EntityControl
+HLAinteractionRoot <|-- ETR_Report
 SMC_EntityControl <|-- Task
 SMC_EntityControl : Entity(NETN-SMC)
 Task <|-- DisruptCommunication
@@ -213,6 +418,7 @@ Task : CommunicationNetworks
 Task : TaskId(NETN-ETR)
 DisruptCommunication : TaskParameters
 SetTransmitterStatus : TaskParameters
+ETR_Report : CommunicationNetworks
 ```
 
 ### Task
@@ -247,6 +453,14 @@ Tasking of an entity to switch on/off all of its transmitters.
 |Entity<br/>(NETN-SMC)|UUID|Required: Reference to a simulation entity for which the control action is intended.| 
 |TaskId<br/>(NETN-ETR)|UUID|Required. Unique identifier for the task.| 
 
+### ETR_Report
+
+A base interaction class for more specialized report interaction classes. The inherited parameter `Time is required.`
+
+|Parameter|Datatype|Semantics|
+|---|---|---|
+|CommunicationNetworks|CommunicationNetworkArray|Optional. Reference to communication networks (NETN-COM) used to transfer report messages. If not provided, the report transmission should not be modelled and federates should receive and act on the task messages directly.|
+
 ## Datatypes
 
 Note that only datatypes defined in this FOM Module are listed below. Please refer to FOM Modules on which this module depends for other referenced datatypes.
@@ -264,8 +478,8 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ConnectionTypeEnum|The type of connection.|
 |DisruptCommunicationTaskStruct|Task specific data for DisruptCommuncation|
 |EntityControlActionEnum|Control actions for entities.|
-|IncomingConnectionArray|A set of incoming connections.|
 |IncomingConnectionStruct|Characteristics of a specific incoming connection.|
+|IncommingConnectionArray|A set of incoming connections.|
 |LinkStatusArray|The status of physical network links.|
 |LinkStatusStruct|Status of a physical network link.|
 |NetworkDeviceArray|A set of network devices.|
@@ -304,7 +518,7 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ArrayOfCommunicationNetworks|UUID|References to communication networks.|
 |CommunicationNetworkArray|ArrayOfUuid|References to a set of communication networks.|
 |ConnectionReceiverArray|ConnectionReceiverStruct|Connection characteristics for a number of receivers.|
-|IncomingConnectionArray|IncomingConnectionStruct|A set of incoming connections.|
+|IncommingConnectionArray|IncomingConnectionStruct|A set of incoming connections.|
 |LinkStatusArray|LinkStatusStruct|The status of physical network links.|
 |NetworkDeviceArray|NetworkDeviceStruct|A set of network devices.|
 |RequestedConnectionArray|RequestedConnection|Characterisation of a set of requested connections.|
@@ -312,10 +526,10 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 ### Fixed Record Datatypes
 |Name|Fields|Semantics|
 |---|---|---|
-|ConnectionReceiverStruct|ReceiverEntityId, Latency, Bandwidth, Reliability, HopCount|Characteristics of a connection to a receiver.|
-|DisruptCommunicationTaskStruct|CommunicationNetowork, Area, DisruptionEnabled|Task specific data for DisruptCommuncation|
-|IncomingConnectionStruct|CommunicationNetwork, SenderEntity, Latency, Bandwidth, Reliability, HopCount|Characteristics of a specific incoming connection.|
-|LinkStatusStruct|TransmitterDeviceId, ReceiverDeviceId, Latency, Bandwidth, Reliability, IsBidirectional|Status of a physical network link.|
+|ConnectionReceiverStruct|ReceiverEntity, Latency, Bandwidth, Reliability, HopCount|Characteristics of a connection to a receiver.|
+|DisruptCommunicationTaskStruct|Network, Area, DisruptionEnabled|Task specific data for DisruptCommuncation|
+|IncomingConnectionStruct|CommunicationNetwork, SendingEntity, Latency, Bandwidth, Reliability, HopCount|Characteristics of a specific incoming connection.|
+|LinkStatusStruct|TransmitterDevice, ReceiverDevice, Latency, Bandwidth, Reliability, IsBidirectional|Status of a physical network link.|
 |NetworkDeviceEmptyCharactersticsStruct||Empty placeholder for future network device characteristics.|
 |NetworkDeviceGenericTransmitterCharacteristicsStruct|MaxLinkRange|Generic description of network device transmitter.|
 |NetworkDeviceStruct|NetworkDeviceId, NetworkDeviceModel, CommunicationNetworks, PhysicalNetwork, TX, RX, IsRelay|Describes the type and capability of a network device. Each device must have at least a transmitter (TX) or receiver (RX). Transceivers should define both.|
