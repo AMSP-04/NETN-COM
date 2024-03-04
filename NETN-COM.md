@@ -402,6 +402,7 @@ A base class of aggregate and discrete scenario domain participants. The BaseEnt
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |IncommingConnections|IncommingConnectionArray|Optional. All incoming communication connections to the receiving simulated entity. Any messages sent on a CommunicationNetwork with a Connection of sufficient quality should be received by this entity and processed if the entity is the intended recipient.|
+|UniqueId<br/>(NETN-BASE)|UUID|Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is generated or pre-defined.| 
 
 ## Interaction Classes
 
