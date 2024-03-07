@@ -21,7 +21,7 @@ The NETN-COM module distinguishes between three layers of networks.
 By separating the representation of the application, connection, and physical layers, different simulations can be used to model the system on different levels, e.g. radio signal propagation simulations for the link layer and an ad hoc network routing simulation on the connection layer. 
  
 The model does not require all levels and networks to be represented in the federation. Which objects are needed depends on the federation design and allocation of modelling responsibilities. 
-
+ 
  
 ## Application Layer 
  
@@ -35,28 +35,28 @@ The `IncommingConnections` attribute can be published by other simulations that 
 classDiagram 
 direction LR 
  
-
-
-BaseEntity *-- "0..*" Incomming Connection
-BaseEntity:IncommingConnection
-
-Incomming Connection:CommunicationNetwork
-Incomming Connection:SenderEntity
-Incomming Connection --> "1" CommunicationNetwork : CommunicationNetwork
-Incomming Connection:Latency
-Incomming Connection:Bandwith
-Incomming Connection:Reliability
-Incomming Connection:HopCount
-Incomming Connection --> BaseEntity:SenderEntity
-
-
-CommunicationNetwork:Name
-CommunicationNetwork:ServiceType
-CommunicationNetwork:NetworkType
-
-
-BaseEntity:UniqueId(NETN-BASE)
-CommunicationNetwork:UniqueId(NETN-BASE)
+ 
+ 
+BaseEntity *-- "0..*" Incomming Connection 
+BaseEntity:IncommingConnection 
+ 
+Incomming Connection:CommunicationNetwork 
+Incomming Connection:SenderEntity 
+Incomming Connection --> "1" CommunicationNetwork : CommunicationNetwork 
+Incomming Connection:Latency 
+Incomming Connection:Bandwith 
+Incomming Connection:Reliability 
+Incomming Connection:HopCount 
+Incomming Connection --> BaseEntity:SenderEntity 
+ 
+ 
+CommunicationNetwork:Name 
+CommunicationNetwork:ServiceType 
+CommunicationNetwork:NetworkType 
+ 
+ 
+BaseEntity:UniqueId(NETN-BASE) 
+CommunicationNetwork:UniqueId(NETN-BASE) 
 ``` 
  
  
@@ -91,41 +91,41 @@ The `CommunicationNode` represents a node in a logical communication network. Ea
 ```mermaid 
 classDiagram 
 direction LR 
-
-CommunicationNode:HostEntity
-CommunicationNode:Location
-CommunicationNode:RequestedConnections
-CommunicationNode: UniqueId(NETN-BASE)
-
-
-CommunicationNode --> "1" BaseEntity : HostEntity
-
-
-
-
-BaseEntity:UniqueId
-
-NetworkDevice:Id
-
-CommunicationNode:NetworkDevices
-CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice
-
-
-
-RequestedConnection:CommunicationNetwork
-RequestedConnection:RequestedConnectionType
-RequestedConnection:ConnectionId
-RequestedConnection:DestinationEntities
-RequestedConnection:NetworkDevice
-RequestedConnection --> "1" NetworkDevice : NetworkDevice
-RequestedConnection --> "1" BaseEntity : DestinationEntities
-RequestedConnection --* "1..*" CommunicationNode
-
+ 
+CommunicationNode:HostEntity 
+CommunicationNode:Location 
+CommunicationNode:RequestedConnections 
+CommunicationNode: UniqueId(NETN-BASE) 
+ 
+ 
+CommunicationNode --> "1" BaseEntity : HostEntity 
+ 
+ 
+ 
+ 
+BaseEntity:UniqueId 
+ 
+NetworkDevice:Id 
+ 
+CommunicationNode:NetworkDevices 
+CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice 
+ 
+ 
+ 
+RequestedConnection:CommunicationNetwork 
+RequestedConnection:RequestedConnectionType 
+RequestedConnection:ConnectionId 
+RequestedConnection:DestinationEntities 
+RequestedConnection:NetworkDevice 
+RequestedConnection --> "1" NetworkDevice : NetworkDevice 
+RequestedConnection --> "1" BaseEntity : DestinationEntities 
+RequestedConnection --* "1..*" CommunicationNode 
+ 
 ``` 
-
-Based on the `RequestedConnection` and available devices a `Connection` may be established. Each `Connection` can be modelled as an individual objects with details of the connection quality for each potential receiver.
-
-
+ 
+Based on the `RequestedConnection` and available devices a `Connection` may be established. Each `Connection` can be modelled as an individual objects with details of the connection quality for each potential receiver. 
+ 
+ 
 ```mermaid 
 classDiagram 
 direction LR 
@@ -142,7 +142,7 @@ CommunicationNetwork:ServiceType
 CommunicationNetwork:NetworkType 
 CommunicationNetwork:UniqueId(NETN-BASE) 
  
-
+ 
 Connection --> "1" CommunicationNetwork : CommunicationNetwork 
 Connection --> "1" BaseEntity : SenderEntity 
 Connection --* "1..*" Receiver 
@@ -158,56 +158,53 @@ BaseEntity:UniqueId
  
 ``` 
  
-
-
-## Physical Layer
-
+ 
+ 
+## Physical Layer 
+ 
 The physical layer models the `PhysicalNetwork` that implements the `LinkStates` between Network Devices. This is required to establish the connectivity required to create a `Connection` between `CommunicationNode`. 
-
-
-
+ 
+ 
+ 
 ```mermaid 
 classDiagram 
 direction LR 
-
-
-
-PhysicalNetwork:Name
-PhysicalNetwork:Description
-PhysicalNetwork: UniqueId(NETN-BASE)
-
-
-LinkStates: PhysicalNetwork
-LinkStates: Links
-LinkStates: UniqueId(NETN-BASE)
-
-
-
-LinkStates --> "1" PhysicalNetwork : PhysicalNetwork
-LinkStates --> "1" LinkStatus : Link
-
-
-LinkStatus:TransmitterDevice
-LinkStatus:ReceiverDevice
-LinkStatus:Bandwith
-LinkStatus:Latency
-LinkStatus:Reliability
-LinkStatus:isBidirectional
-LinkStatus *-- "1" NetworkDevice:TransmitterDevice
-LinkStatus *--> "1" NetworkDevice:ReceiverDevice
-CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice
-
-NetworkDevice:Id
-
-CommunicationNode:NetworkDevices
-CommunicationNode: UniqueId(NETN-BASE)
-
+ 
+ 
+ 
+PhysicalNetwork:Name 
+PhysicalNetwork:Description 
+PhysicalNetwork: UniqueId(NETN-BASE) 
+ 
+ 
+LinkStates: PhysicalNetwork 
+LinkStates: Links 
+LinkStates: UniqueId(NETN-BASE) 
+ 
+ 
+ 
+LinkStates --> "1" PhysicalNetwork : PhysicalNetwork 
+LinkStates --> "1" LinkStatus : Link 
+ 
+ 
+LinkStatus:TransmitterDevice 
+LinkStatus:ReceiverDevice 
+LinkStatus:Bandwith 
+LinkStatus:Latency 
+LinkStatus:Reliability 
+LinkStatus:isBidirectional 
+LinkStatus *-- "1" NetworkDevice:TransmitterDevice 
+LinkStatus *--> "1" NetworkDevice:ReceiverDevice 
+CommunicationNode *--> "0..*" NetworkDevice:NetworkDevice 
+ 
+NetworkDevice:Id 
+ 
+CommunicationNode:NetworkDevices 
+CommunicationNode: UniqueId(NETN-BASE) 
+ 
 ``` 
-
-A Network Device is a technical device, e.g., radio or ethernet, connecting a `CommunicationNode` to a physical network. The `LinkStates` provide all link status data related to a `PhysicalNetwork`. The link describes the relationship between a transmitting and a receiving network device. 
-
-
-
+ 
+A Network Device is a technical device, e.g., radio or ethernet, connecting a `CommunicationNode` to a physical network. The `LinkStates` provide all link status data related to a `PhysicalNetwork`. The link describes the relationship between a transmitting and a receiving network device.
 
 
 ## Object Classes
@@ -478,7 +475,7 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ConnectionReceiverStruct|Characteristics of a connection to a receiver.|
 |ConnectionTypeEnum|The type of connection.|
 |DisruptCommunicationTaskStruct|Task specific data for DisruptCommuncation|
-|EntityControlActionEnum|Control actions for entities.|
+|EntityControlActionEnum|Enumeration of Entity Control Actions. The datatype is expected to be extended in specific modules defining additional actions.|
 |IncomingConnectionStruct|Characteristics of a specific incoming connection.|
 |IncommingConnectionArray|A set of incoming connections.|
 |LinkStatusArray|The status of physical network links.|
@@ -510,7 +507,7 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |CommunicationNetworkTypeEnum|HLAoctet|The type of communication network.|
 |CommunicationServiceTypeEnum|HLAoctet|The type of service used on a communication network. Service types as defined in MSDL. DATTRF: Data transfer FAX: Facsimile IFF: Identify Friend or Foe IMAGE: Image MCI: Multilateral Interoperability Programme (MIP) Common Interface Service MHS: Message Handling Service TDL: Tactical Data Link VIDSVC: Video Service VOCSVC: Voice Service NOS: Not Otherwise Specified|
 |ConnectionTypeEnum|HLAoctet|The type of connection.|
-|EntityControlActionEnum|HLAinteger32BE|Control actions for entities.|
+|EntityControlActionEnum|HLAinteger32BE|Enumeration of Entity Control Actions. The datatype is expected to be extended in specific modules defining additional actions.|
 |PhysicalNetworkTypeEnum|HLAoctet|The type of a physical network.|
         
 ### Array Datatypes
