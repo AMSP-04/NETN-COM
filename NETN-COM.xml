@@ -597,11 +597,11 @@ NOS: Not Otherwise Specified</semantics>
                 <semantics>Enumeration of Entity Control Actions. The datatype is expected to be extended in specific modules defining additional actions.</semantics>
                 <enumerator>
                     <name>DisruptCommunication</name>
-                    <value>19</value>
+                    <value>200</value>
                 </enumerator>
                 <enumerator>
                     <name>SetTransmitterStatus</name>
-                    <value>38</value>
+                    <value>201</value>
                 </enumerator>
             </enumeratedData>
         </enumeratedDataTypes>
