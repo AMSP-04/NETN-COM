@@ -13,6 +13,7 @@ The communication networks can be modelled using radios, ethernet, satellite com
 
 
 
+
 ## License
 
 Copyright (C) 2020 NATO/OTAN. This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md).
